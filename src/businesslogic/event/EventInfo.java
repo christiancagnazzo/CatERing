@@ -33,6 +33,10 @@ public class EventInfo implements EventItemInfo {
         return name + ": " + dateStart + "-" + dateEnd + ", " + participants + " pp. (" + organizer.getUserName() + ")";
     }
 
+    public boolean isPlanned(ServiceInfo s){
+        return services.contains(s);
+    }
+
     // STATIC METHODS FOR PERSISTENCE
 
     public static ObservableList<EventInfo> loadAllEventInfo() {

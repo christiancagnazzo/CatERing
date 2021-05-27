@@ -14,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class Menu {
@@ -181,6 +182,14 @@ public class Menu {
         return FXCollections.unmodifiableObservableList(this.freeItems);
     }
 
+    public List<MenuItem> getAllItems(){
+        List<MenuItem> l = new ArrayList<>(getFreeItems());
+        for (Section sec : sections){
+            l.addAll(sec.getItems());
+        }
+        return l;
+    }
+
     public void setTitle(String title) {
         this.title = title;
     }
@@ -298,6 +307,8 @@ public class Menu {
         if (sec == null) freeItems.remove(mi);
         else sec.removeItem(mi);
     }
+
+
 
     // STATIC METHODS FOR PERSISTENCE
 
