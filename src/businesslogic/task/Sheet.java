@@ -2,6 +2,7 @@ package businesslogic.task;
 
 import businesslogic.event.ServiceInfo;
 import businesslogic.menu.Menu;
+import businesslogic.recipe.CookingProcedure;
 import businesslogic.user.User;
 import javafx.collections.FXCollections;
 import persistence.BatchUpdateHandler;
@@ -27,8 +28,10 @@ public class Sheet {
         taskList = new ArrayList<>();
     }
 
-    public void addTask(Task t){
-        taskList.add(t);
+    public Task addNewTask(CookingProcedure cookingProcedure){
+        Task task = new Task(cookingProcedure);
+        taskList.add(task);
+        return task;
     }
 
     public String toString(){
@@ -41,7 +44,10 @@ public class Sheet {
         return s.toString();
     }
 
+    public int getId(){ return id;}
+
     // STATIC METHODS FOR PERSISTENCE
+    // todo: load all sheet
 
     public static void saveNewSheet(Sheet s) {
         String sheetInsert = "INSERT INTO catering.Sheets (service_id, owner_id) VALUES (?, ?);";

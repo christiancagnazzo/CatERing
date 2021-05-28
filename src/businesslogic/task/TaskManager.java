@@ -22,8 +22,6 @@ public class TaskManager {
     }
 
     public Sheet createSheet(EventInfo ev, ServiceInfo serv) throws UseCaseLogicException {
-        // TODO: TASK NOME DELLA RICETTA E NON DESCRIZIONE
-
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
 
         if (!user.isChef())
@@ -37,12 +35,12 @@ public class TaskManager {
 
         List<MenuItem> allItems = m.getAllItems();
 
-        for (MenuItem mi: allItems){
-            Recipe r = mi.getItemRecipe();
-            sheet.addTask(new Task(r));
-            ArrayList<CookingProcedure> allMi = CatERing.getInstance().getRecipeManager().getAllNecessaryProcedure(r);
+        for (MenuItem item: allItems){
+            Recipe recipe = item.getItemRecipe();
+            sheet.addNewTask(recipe);
+            ArrayList<CookingProcedure> allMi = CatERing.getInstance().getRecipeManager().getAllNecessaryProcedure(recipe);
             for (CookingProcedure cp : allMi){
-                sheet.addTask(new Task(cp));
+                sheet.addNewTask(recipe);
             }
         }
 
@@ -50,6 +48,22 @@ public class TaskManager {
         this.notifySheetCreated(sheet);
 
         return sheet;
+    }
+
+    public Task addTask(CookingProcedure procedure) throws UseCaseLogicException {
+        if (currentSheet == null)
+                throw new UseCaseLogicException();
+
+        Task task = currentSheet.addNewTask(procedure);
+
+        this.notifyNewTaskAdded(task);
+        return task;
+    }
+
+    private void notifyNewTaskAdded(Task task) {
+        for (TaskEventReceiver er : this.eventReceivers) {
+            er.updateNewTaskAdded(this.currentSheet,task);
+        }
     }
 
     private void notifySheetCreated(Sheet sheet) {

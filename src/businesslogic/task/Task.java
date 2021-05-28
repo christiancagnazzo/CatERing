@@ -24,6 +24,10 @@ public class Task {
         id = 0;
     }
 
+    public String toString(){
+        return procedure.toString();
+    }
+
     public CookingProcedure getProcedure(){ return procedure;}
 
     // STATIC METHODS FOR PERSISTENCE
@@ -45,8 +49,12 @@ public class Task {
 
     }
 
-    public String toString(){
-        return procedure.toString();
+    public static void saveNewTask(int sheet_id, Task task) {
+        String taskInsert = "INSERT INTO catering.Tasks (procedure_id, sheet_id) " +
+                "VALUES (" + task.getProcedure().getId() + ", " + sheet_id + ");";
+        PersistenceManager.executeUpdate(taskInsert);
+
+        task.id = PersistenceManager.getLastId();
     }
 
 }

@@ -183,11 +183,11 @@ public class Menu {
     }
 
     public List<MenuItem> getAllItems(){
-        List<MenuItem> l = new ArrayList<>(getFreeItems());
+        List<MenuItem> allItems = new ArrayList<>(getFreeItems());
         for (Section sec : sections){
-            l.addAll(sec.getItems());
+            allItems.addAll(sec.getItems());
         }
-        return l;
+        return allItems;
     }
 
     public void setTitle(String title) {
