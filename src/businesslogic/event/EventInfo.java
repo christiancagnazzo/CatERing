@@ -17,6 +17,7 @@ public class EventInfo implements EventItemInfo {
     private Date dateEnd;
     private int participants;
     private User organizer;
+    private User chef;
 
     private ObservableList<ServiceInfo> services;
 
@@ -37,6 +38,9 @@ public class EventInfo implements EventItemInfo {
         return services.contains(s);
     }
 
+    public boolean isAssigned(User chef){
+        return this.chef.getId() == chef.getId();
+    }
     // STATIC METHODS FOR PERSISTENCE
 
     public static ObservableList<EventInfo> loadAllEventInfo() {
@@ -53,6 +57,8 @@ public class EventInfo implements EventItemInfo {
                 e.participants = rs.getInt("expected_participants");
                 int org = rs.getInt("organizer_id");
                 e.organizer = User.loadUserById(org);
+                int chef = rs.getInt("chef_id");
+                e.chef = User.loadUserById(chef);
                 all.add(e);
             }
         });

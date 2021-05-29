@@ -312,6 +312,52 @@ public class Menu {
 
     // STATIC METHODS FOR PERSISTENCE
 
+    public static Menu loadMenuById(int uid) {
+        if (loadedMenus.containsKey(uid)) return loadedMenus.get(uid);
+
+        Menu load = new Menu();
+        String userQuery = "SELECT * FROM Menus WHERE id='"+uid+"'";
+        PersistenceManager.executeQuery(userQuery, new ResultHandler() {
+            @Override
+            public void handle(ResultSet rs) throws SQLException {
+                load.id = rs.getInt("id");
+                load.title = rs.getString("title");
+                load.owner = User.loadUserById(rs.getInt("owner_id"));
+                load.published = rs.getBoolean("published");
+            }
+        });
+        if (load.id > 0) {
+            loadedMenus.put(load.id, load);
+        }
+
+        // load features
+        String featQ = "SELECT * FROM MenuFeatures WHERE menu_id = " + load.id;
+        PersistenceManager.executeQuery(featQ, new ResultHandler() {
+            @Override
+            public void handle(ResultSet rs) throws SQLException {
+                load.featuresMap.put(rs.getString("name"), rs.getBoolean("value"));
+            }
+        });
+
+        // load sections
+        load.sections = Section.loadSectionsFor(load.id);
+
+        // load free items
+        load.freeItems = MenuItem.loadItemsFor(load.id, 0);
+
+        // find if "in use"
+        String inuseQ = "SELECT * FROM Services WHERE approved_menu_id = " + load.id;
+        PersistenceManager.executeQuery(inuseQ, new ResultHandler() {
+            @Override
+            public void handle(ResultSet rs) throws SQLException {
+                // se c'è anche un solo risultato vuol dire che il menù è in uso
+                load.inUse = true;
+            }
+        });
+
+        return load;
+    }
+
     public static void saveNewMenu(Menu m) {
         String menuInsert = "INSERT INTO catering.Menus (title, owner_id, published) VALUES (?, ?, ?);";
         int[] result = PersistenceManager.executeBatchUpdate(menuInsert, 1, new BatchUpdateHandler() {

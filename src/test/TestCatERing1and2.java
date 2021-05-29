@@ -8,21 +8,24 @@ import businesslogic.menu.Menu;
 import businesslogic.recipe.Recipe;
 import businesslogic.task.Sheet;
 import businesslogic.task.Task;
+import businesslogic.task.TaskException;
+import businesslogic.user.User;
 import javafx.collections.ObservableList;
 
 public class TestCatERing1and2 {
-    public static void main(String[] args) throws UseCaseLogicException {
+    public static void main(String[] args) throws UseCaseLogicException, TaskException {
         System.out.println("TEST FAKE LOGIN");
         CatERing.getInstance().getUserManager().fakeLogin("Lidia");
-        System.out.println(CatERing.getInstance().getUserManager().getCurrentUser());
+        User currentUser = CatERing.getInstance().getUserManager().getCurrentUser();
+        System.out.println(currentUser);
 
         ObservableList<EventInfo> events = CatERing.getInstance().getEventManager().getEventInfo();
-        ServiceInfo s = events.get(0).getServices().get(1);
-        Menu m = CatERing.getInstance().getMenuManager().getAllMenus().get(2);
-        s.setMenu(m);
-        System.out.println("Menu nr. "+m.getId());
+        ServiceInfo s = events.get(2).getServices().get(1); // servizio 0
+        Menu m = s.getMenu();
 
-        Sheet sheet = CatERing.getInstance().getTaskManager().createSheet(events.get(0),s);
+        if (m != null)
+            System.out.println("Menu nr. "+m.getId());
+        Sheet sheet = CatERing.getInstance().getTaskManager().createSheet(events.get(2),s);
         System.out.println(sheet);
 
         ObservableList<Recipe> recipes = CatERing.getInstance().getRecipeManager().getRecipes();
@@ -30,7 +33,7 @@ public class TestCatERing1and2 {
 
         System.out.println(sheet);
 
-        // todo: migliora test (separa e Load Dati)
-        // controlla posso chiamare addNewTask su sheet è corretto?
+        // todo: migliora test (separa e Load Sheet)
+        // todo: test openSheet()
     }
 }

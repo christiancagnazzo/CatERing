@@ -1,17 +1,23 @@
 package businesslogic.task;
 
+import businesslogic.event.EventInfo;
 import businesslogic.event.ServiceInfo;
 import businesslogic.menu.Menu;
+import businesslogic.menu.MenuItem;
+import businesslogic.menu.Section;
 import businesslogic.recipe.CookingProcedure;
 import businesslogic.user.User;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import persistence.BatchUpdateHandler;
 import persistence.PersistenceManager;
+import persistence.ResultHandler;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class Sheet {
@@ -46,8 +52,13 @@ public class Sheet {
 
     public int getId(){ return id;}
 
+    public boolean isOwner(User user){
+        return user.getId() == owner.getId();
+    }
+
+
+
     // STATIC METHODS FOR PERSISTENCE
-    // todo: load all sheet
 
     public static void saveNewSheet(Sheet s) {
         String sheetInsert = "INSERT INTO catering.Sheets (service_id, owner_id) VALUES (?, ?);";
@@ -73,4 +84,30 @@ public class Sheet {
         loadedSheet.put(s.id,s);
         }
     }
-}
+
+
+   /* public static ObservableList<Sheet> loadAllSheet() {
+        ObservableList<Sheet> all = FXCollections.observableArrayList();
+        String query = "SELECT * FROM Sheets WHERE true";
+        PersistenceManager.executeQuery(query, new ResultHandler() {
+            @Override
+            public void handle(ResultSet rs) throws SQLException {
+                int id = rs.getInt("id");
+                int service_id = rs.getInt("service_id");
+                int owner_id = rs.getInt("owner_id");
+                ServiceInfo service = ServiceInfo.loadServiceById(service_id);
+                User user = User.loadUserById(owner_id);
+                Sheet sheet = new Sheet(user,service);
+                sheet.id = id;
+                all.add(sheet);
+            }
+        });
+
+        for (Sheet e : all) {
+            loadTasksForSheet(e.id);
+            query select task where sheet_id = id
+                    ...
+        }
+        return all;
+    }*/
+  }

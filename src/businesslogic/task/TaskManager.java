@@ -21,11 +21,14 @@ public class TaskManager {
         eventReceivers = new ArrayList<>();
     }
 
-    public Sheet createSheet(EventInfo ev, ServiceInfo serv) throws UseCaseLogicException {
+    public Sheet createSheet(EventInfo ev, ServiceInfo serv) throws UseCaseLogicException, TaskException {
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
 
         if (!user.isChef())
             throw new UseCaseLogicException();
+
+        if (!ev.isAssigned(user))
+            throw new TaskException();
 
         if (!ev.isPlanned(serv) || (serv.getMenu() == null))
             throw new UseCaseLogicException();
@@ -59,6 +62,21 @@ public class TaskManager {
         this.notifyNewTaskAdded(task);
         return task;
     }
+
+    public void openSheet(Sheet sheet) throws UseCaseLogicException, TaskException {
+        User user = CatERing.getInstance().getUserManager().getCurrentUser();
+
+        if (!user.isChef())
+            throw new UseCaseLogicException();
+
+        if (!sheet.isOwner(user))
+            throw new TaskException();
+
+        setCurrentSheet(sheet);
+    }
+
+
+    //
 
     private void notifyNewTaskAdded(Task task) {
         for (TaskEventReceiver er : this.eventReceivers) {
