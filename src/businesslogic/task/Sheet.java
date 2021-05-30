@@ -40,6 +40,18 @@ public class Sheet {
         return task;
     }
 
+    public void removeTask(Task task){
+        this.taskList.remove(task);
+    }
+
+    public int getTaskPosition(Task task){
+        return taskList.indexOf(task);
+    }
+
+    public int getSize(){
+        return taskList.size();
+    }
+
     public String toString(){
         StringBuilder s = new StringBuilder();
         s.append("EVENT ID: ").append(service.getEvenId()).append("\n");
@@ -56,7 +68,14 @@ public class Sheet {
         return user.getId() == owner.getId();
     }
 
+    public boolean isTaskIn(Task task) {
+        return taskList.contains(task);
+    }
 
+    public void moveTask(Task task, int position) {
+        taskList.remove(task);
+        taskList.add(position,task);
+    }
 
     // STATIC METHODS FOR PERSISTENCE
 
@@ -85,29 +104,51 @@ public class Sheet {
         }
     }
 
+    public static void saveTaskOrder(Sheet sheet) {
+        String s = "UPDATE Tasks SET position = ? WHERE id = ?";
+        PersistenceManager.executeBatchUpdate(s, sheet.taskList.size(), new BatchUpdateHandler() {
+            @Override
+            public void handleBatchItem(PreparedStatement ps, int batchCount) throws SQLException {
+                ps.setInt(1, batchCount);
+                ps.setInt(2, sheet.taskList.get(batchCount).getId());
+            }
 
-   /* public static ObservableList<Sheet> loadAllSheet() {
-        ObservableList<Sheet> all = FXCollections.observableArrayList();
-        String query = "SELECT * FROM Sheets WHERE true";
+            @Override
+            public void handleGeneratedIds(ResultSet rs, int count) throws SQLException {
+                // no generated ids to handle
+            }
+        });
+    }
+
+
+    // TODO
+    /*public static ObservableList<Sheet> loadAllSheet(){
+        String query = "SELECT * FROM Sheets WHERE " + true;
+        ArrayList<Sheet> newSheets = new ArrayList<>();
+        ArrayList<Sheet> oldSheets = new ArrayList<>();
+        ArrayList<Integer> oldUids = new ArrayList<>();
+        ArrayList<Integer> oldSids = new ArrayList<>();
+
         PersistenceManager.executeQuery(query, new ResultHandler() {
             @Override
             public void handle(ResultSet rs) throws SQLException {
                 int id = rs.getInt("id");
-                int service_id = rs.getInt("service_id");
-                int owner_id = rs.getInt("owner_id");
-                ServiceInfo service = ServiceInfo.loadServiceById(service_id);
-                User user = User.loadUserById(owner_id);
-                Sheet sheet = new Sheet(user,service);
-                sheet.id = id;
-                all.add(sheet);
+                if (loadedSheet.containsKey(id)) {
+                    Sheet s = loadedSheet.get(id);
+                    oldUids.add(rs.getInt("owner_id"));
+                    oldSids.add(rs.getInt("service_id"));
+                    oldSheets.add(s);
+                } else {
+                    int user_id = rs.getInt("owner_id");
+                    int service_id = rs.getInt("service_id");
+                    User u = User.loadUserById(user_id);
+                    ServiceInfo ser = ServiceInfo.loadServiceById(service_id);
+                    Sheet s = new Sheet(u,ser);
+                    s.id = id;
+                    newSheets.add(s);
+                }
             }
         });
-
-        for (Sheet e : all) {
-            loadTasksForSheet(e.id);
-            query select task where sheet_id = id
-                    ...
-        }
-        return all;
     }*/
+
   }

@@ -11,4 +11,5 @@ public class UserManager {
     public User getCurrentUser() {
         return this.currentUser;
     }
+
 }

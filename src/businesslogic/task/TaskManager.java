@@ -5,10 +5,10 @@ import businesslogic.UseCaseLogicException;
 import businesslogic.event.EventInfo;
 import businesslogic.event.ServiceInfo;
 import businesslogic.menu.Menu;
-import businesslogic.menu.MenuEventReceiver;
 import businesslogic.menu.MenuItem;
 import businesslogic.recipe.CookingProcedure;
 import businesslogic.recipe.Recipe;
+import businesslogic.turn.PreparationTurn;
 import businesslogic.user.User;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +63,28 @@ public class TaskManager {
         return task;
     }
 
+    public void deleteTask(Task task) throws UseCaseLogicException {
+        if (currentSheet == null)
+                throw new UseCaseLogicException();
+
+        currentSheet.removeTask(task);
+
+        this.notifyTaskDeleted(task);
+    }
+
+    public void sortTask(Task task, int position) throws UseCaseLogicException, TaskException {
+        if (currentSheet == null || !currentSheet.isTaskIn(task))
+            throw new UseCaseLogicException();
+
+        if (position < 0 || position >= currentSheet.getSize())
+            throw new TaskException();
+
+        currentSheet.moveTask(task, position);
+
+        this.notifyTaskRearranged(currentSheet);
+    }
+
+
     public void openSheet(Sheet sheet) throws UseCaseLogicException, TaskException {
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
 
@@ -73,6 +95,49 @@ public class TaskManager {
             throw new TaskException();
 
         setCurrentSheet(sheet);
+    }
+
+    /* se non vuole inserire tempo o porzioni stringhe vuote */
+    public void assignTask(PreparationTurn turn, Task task, User cook, String time, String portion) throws UseCaseLogicException, TaskException {
+        if (currentSheet == null || !currentSheet.isTaskIn(task))
+            throw new UseCaseLogicException();
+
+        if ( (cook != null && !cook.isCook() && !turn.isAvailable(cook)) || (turn.isExpired()) || (turn.isSaturated()) )
+            throw new TaskException();
+
+        task.setTurn(turn, cook, time, portion);
+
+        this.notifyTaskAssigned(task);
+    }
+
+    public void assignTask(PreparationTurn turn, Task task, String time, String portion) throws TaskException, UseCaseLogicException {
+        assignTask(turn, task, null, time, portion);
+    }
+
+
+    public void setTime(Task task, String time) throws UseCaseLogicException {
+        if (currentSheet == null || !currentSheet.isTaskIn(task))
+            throw new UseCaseLogicException();
+
+        task.setTime(time);
+        this.notifyTimeChanged(task);
+    }
+
+
+    public void setPortions(Task task, String portions) throws UseCaseLogicException {
+        if (currentSheet == null || !currentSheet.isTaskIn(task))
+            throw new UseCaseLogicException();
+
+        task.setPortions(portions);
+        this.notifyPortionsChanged(task);
+    }
+
+    public void setComplete(Task task, Boolean complete) throws UseCaseLogicException {
+        if (currentSheet == null || !currentSheet.isTaskIn(task))
+            throw new UseCaseLogicException();
+
+        task.setComplete(complete);
+        this.notifyCompleteChanged(task);
     }
 
 
@@ -90,9 +155,46 @@ public class TaskManager {
         }
     }
 
+    private void notifyTaskDeleted(Task task) {
+        for (TaskEventReceiver er : this.eventReceivers) {
+            er.updateTaskDeleted(task);
+        }
+    }
+
+    private void notifyTaskRearranged(Sheet currentSheet) {
+        for (TaskEventReceiver er : this.eventReceivers) {
+            er.updateTaskRearranged(currentSheet);
+        }
+    }
+
     private void setCurrentSheet(Sheet sheet) {
         this.currentSheet = sheet;
     }
+
+    private void notifyTaskAssigned(Task task) {
+        for (TaskEventReceiver er : this.eventReceivers) {
+            er.updateTaskAssigned(task);
+        }
+    }
+
+    private void notifyTimeChanged(Task task) {
+        for (TaskEventReceiver er : this.eventReceivers) {
+            er.updateTimeChanged(task);
+        }
+    }
+
+    private void notifyPortionsChanged(Task task) {
+        for (TaskEventReceiver er : this.eventReceivers) {
+            er.updatePortionsChanged(task);
+        }
+    }
+
+    private void notifyCompleteChanged(Task task) {
+        for (TaskEventReceiver er : this.eventReceivers) {
+            er.updateCompleteChanged(task);
+        }
+    }
+
 
     public void addEventReceiver(TaskEventReceiver rec) {
         this.eventReceivers.add(rec);

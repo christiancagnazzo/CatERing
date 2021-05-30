@@ -10,6 +10,7 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
+import java.util.Map;
 
 public class ServiceInfo implements EventItemInfo {
     private int id;
@@ -59,5 +60,26 @@ public class ServiceInfo implements EventItemInfo {
         });
 
         return result;
+    }
+
+    public static ServiceInfo loadServiceById(int service_id) {
+        String query = "SELECT event_id, name, service_date, time_start, time_end, expected_participants, approved_menu_id " +
+                "FROM Services WHERE id = " + service_id;
+
+        ServiceInfo serv = new ServiceInfo("");
+        PersistenceManager.executeQuery(query, rs -> {
+            serv.name = rs.getString("name");
+            serv.id = service_id;
+            serv.date = rs.getDate("service_date");
+            serv.timeStart = rs.getTime("time_start");
+            serv.timeEnd = rs.getTime("time_end");
+            serv.participants = rs.getInt("expected_participants");
+            serv.event = rs.getInt("event_id");
+            int menu_id = rs.getInt("approved_menu_id");
+            if (menu_id != 0)
+                serv.menu = Menu.loadMenuById(menu_id);
+        });
+
+        return serv;
     }
 }
