@@ -56,6 +56,15 @@ public class Task {
         this.completed = complete;
     }
 
+    public void removeAssignment() {
+        this.turn = null;
+    }
+
+    public String getTime(){ return time;}
+    public String getPortions(){ return portions;}
+    public User getCook(){ return cook;}
+    public PreparationTurn getTurn(){ return turn;}
+
     // STATIC METHODS FOR PERSISTENCE
 
     public static void saveAllTasks(ArrayList<Task> taskList, int sheet_id) {
@@ -89,6 +98,7 @@ public class Task {
         PersistenceManager.executeUpdate(rem);
     }
 
+
     public static void updateAssignment(Task task) {
         String s = "UPDATE Tasks SET time='"+ PersistenceManager.escapeString(task.time)+
                 "', portions='"+PersistenceManager.escapeString(task.portions)+
@@ -114,10 +124,19 @@ public class Task {
     }
 
     public static void updateCompleted(Task task) {
-        // TODO !!!
-        String s = "UPDATE Tasks SET completed = '" + PersistenceManager.escapeString(task.portions) + "'" +
-                " WHERE id = " + task.completed;
+        int value;
+        if (task.completed)
+            value = 1;
+        else
+            value = 0;
+        String s = "UPDATE Tasks SET completed = '" + value + "'" +
+                " WHERE id = " + task.getId();
         PersistenceManager.executeUpdate(s);
     }
 
+    public static void updateAssignmentRemoved(Task task) {
+        String s = "UPDATE Tasks SET turn_id = null"+
+                " WHERE id = " + task.getId();
+        PersistenceManager.executeUpdate(s);
+    }
 }

@@ -122,7 +122,7 @@ public class Sheet {
 
 
     // TODO
-    /*public static ObservableList<Sheet> loadAllSheet(){
+ /*   public static ObservableList<Sheet> loadAllSheet(){
         String query = "SELECT * FROM Sheets WHERE " + true;
         ArrayList<Sheet> newSheets = new ArrayList<>();
         ArrayList<Sheet> oldSheets = new ArrayList<>();
@@ -149,6 +149,6 @@ public class Sheet {
                 }
             }
         });
-    }*/
 
+    }*/
   }

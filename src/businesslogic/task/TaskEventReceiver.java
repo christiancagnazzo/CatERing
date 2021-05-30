@@ -16,4 +16,6 @@ public interface TaskEventReceiver {
     void updatePortionsChanged(Task task);
 
     void updateCompleteChanged(Task task);
+
+    void updateAssignmentRemoved(Task task);
 }

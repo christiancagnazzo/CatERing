@@ -35,4 +35,7 @@ public class TaskPersistence implements TaskEventReceiver {
 
     @Override
     public void updateCompleteChanged(Task task) { Task.updateCompleted(task); }
+
+    @Override
+    public void updateAssignmentRemoved(Task task) { Task.updateAssignmentRemoved(task);}
 }

@@ -14,6 +14,8 @@ import businesslogic.turn.Turn;
 import businesslogic.user.User;
 import javafx.collections.ObservableList;
 
+import java.util.ArrayList;
+
 public class TestCatERing1and2 {
     public static void main(String[] args) throws UseCaseLogicException, TaskException {
         System.out.println("TEST FAKE LOGIN");
@@ -40,13 +42,17 @@ public class TestCatERing1and2 {
         //System.out.println(sheet);
 
         User cook = User.loadUserById(3); // !!!!!
-        PreparationTurn turn = new PreparationTurn(); // !!!!
-        CatERing.getInstance().getTaskManager().assignTask(turn, task,"","3 porzioni");
+        ObservableList<PreparationTurn> turns = CatERing.getInstance().getTurnManager().getPreparationsTurns();
+
+        CatERing.getInstance().getTaskManager().assignTask(turns.get(0), task,"","3 porzioni");
 
         CatERing.getInstance().getTaskManager().setTime(task,"mezz'ora");
         CatERing.getInstance().getTaskManager().setPortions(task,"10 porzioni");
         CatERing.getInstance().getTaskManager().setComplete(task, true);
 
+        CatERing.getInstance().getTaskManager().deleteAssignment(task);
+        CatERing.getInstance().getTaskManager().setNewTurn(task, turns.get(1));
+        CatERing.getInstance().getTaskManager().setCook(task, currentUser);
         // todo: migliora test (separa e Load Sheet)
         // todo: test openSheet()
         // todo: test loadsheet()

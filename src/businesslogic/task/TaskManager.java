@@ -9,6 +9,7 @@ import businesslogic.menu.MenuItem;
 import businesslogic.recipe.CookingProcedure;
 import businesslogic.recipe.Recipe;
 import businesslogic.turn.PreparationTurn;
+import businesslogic.turn.Turn;
 import businesslogic.user.User;
 import java.util.ArrayList;
 import java.util.List;
@@ -141,6 +142,22 @@ public class TaskManager {
     }
 
 
+    public void deleteAssignment(Task task) throws UseCaseLogicException {
+        if (currentSheet == null || !currentSheet.isTaskIn(task))
+            throw new UseCaseLogicException();
+
+        task.removeAssignment();
+        this.notifyAssignmentRemoved(task);
+    }
+
+    public void setCook(Task task, User cook) throws UseCaseLogicException, TaskException {
+        this.assignTask(task.getTurn(),task,cook,task.getTime(),task.getPortions());
+    }
+
+    public void setNewTurn(Task task, PreparationTurn turn) throws TaskException, UseCaseLogicException {
+        this.assignTask(turn,task,task.getCook(),task.getTime(),task.getPortions());
+    }
+
     //
 
     private void notifyNewTaskAdded(Task task) {
@@ -192,6 +209,12 @@ public class TaskManager {
     private void notifyCompleteChanged(Task task) {
         for (TaskEventReceiver er : this.eventReceivers) {
             er.updateCompleteChanged(task);
+        }
+    }
+
+    private void notifyAssignmentRemoved(Task task) {
+        for (TaskEventReceiver er : this.eventReceivers) {
+            er.updateAssignmentRemoved(task);
         }
     }
 
