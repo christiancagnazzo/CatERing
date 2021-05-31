@@ -2,9 +2,6 @@ package businesslogic.task;
 
 import businesslogic.event.EventInfo;
 import businesslogic.event.ServiceInfo;
-import businesslogic.menu.Menu;
-import businesslogic.menu.MenuItem;
-import businesslogic.menu.Section;
 import businesslogic.recipe.CookingProcedure;
 import businesslogic.user.User;
 import javafx.collections.FXCollections;
@@ -34,8 +31,11 @@ public class Sheet {
         taskList = new ArrayList<>();
     }
 
-    public Task addNewTask(CookingProcedure cookingProcedure){
-        Task task = new Task(cookingProcedure);
+    // todo provaaaaaaaaaaaaa
+    public ArrayList<Task> getTaskList(){ return taskList;}
+
+    public Task addNewTask(CookingProcedure cookingProcedure, boolean added){
+        Task task = new Task(cookingProcedure, added);
         taskList.add(task);
         return task;
     }
@@ -50,6 +50,19 @@ public class Sheet {
 
     public int getSize(){
         return taskList.size();
+    }
+
+    public ArrayList<Task> regenerate() {
+        ArrayList<Task> deleted = new ArrayList<>();
+        for (Task task : taskList){
+            if (task.isAdded()) deleted.add(task);
+        }
+        taskList.removeIf(Task::isAdded);
+        for (Task task : taskList){
+            task.setComplete(false);
+            task.setTurn(null,null,"","");
+        }
+        return deleted;
     }
 
     public String toString(){
@@ -111,6 +124,21 @@ public class Sheet {
             public void handleBatchItem(PreparedStatement ps, int batchCount) throws SQLException {
                 ps.setInt(1, batchCount);
                 ps.setInt(2, sheet.taskList.get(batchCount).getId());
+            }
+
+            @Override
+            public void handleGeneratedIds(ResultSet rs, int count) throws SQLException {
+                // no generated ids to handle
+            }
+        });
+    }
+
+    public static void updateSheetRegenerated(Sheet sheet) {
+        String s = "UPDATE Tasks SET cook_id = null, completed = 0, time = null, portions = null, turn_id = null WHERE id = ?";
+        PersistenceManager.executeBatchUpdate(s, sheet.taskList.size(), new BatchUpdateHandler() {
+            @Override
+            public void handleBatchItem(PreparedStatement ps, int batchCount) throws SQLException {
+                ps.setInt(1, sheet.taskList.get(batchCount).getId());
             }
 
             @Override

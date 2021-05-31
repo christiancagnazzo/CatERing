@@ -38,4 +38,7 @@ public class TaskPersistence implements TaskEventReceiver {
 
     @Override
     public void updateAssignmentRemoved(Task task) { Task.updateAssignmentRemoved(task);}
+
+    @Override
+    public void updateSheetRegenerated(Sheet currentSheet) { Sheet.updateSheetRegenerated(currentSheet);}
 }

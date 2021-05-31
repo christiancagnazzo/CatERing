@@ -19,11 +19,15 @@ public class Task {
     private User cook;
     private CookingProcedure procedure;
     private PreparationTurn turn;
+    private boolean added;
 
-    public Task(CookingProcedure procedure){
+    public Task(CookingProcedure procedure, boolean added){
         this.cook = null;
         this.turn = null;
         this.procedure = procedure;
+        this.added = added;
+        this.time = "";
+        this.portions = "";
         id = 0;
     }
 
@@ -60,9 +64,12 @@ public class Task {
         this.turn = null;
     }
 
+    public boolean isAdded(){ return this.added; }
+
     public String getTime(){ return time;}
     public String getPortions(){ return portions;}
     public User getCook(){ return cook;}
+
     public PreparationTurn getTurn(){ return turn;}
 
     // STATIC METHODS FOR PERSISTENCE
@@ -86,8 +93,8 @@ public class Task {
     }
 
     public static void saveNewTask(int sheet_id, Task task, int position) {
-        String taskInsert = "INSERT INTO catering.Tasks (procedure_id, sheet_id, position) " +
-                "VALUES (" + task.getProcedure().getId() + ", " + sheet_id + ", " + position +");";
+        String taskInsert = "INSERT INTO catering.Tasks (procedure_id, sheet_id, position, added) " +
+                "VALUES (" + task.getProcedure().getId() + ", " + sheet_id + ", " + position +", 1);";
         PersistenceManager.executeUpdate(taskInsert);
 
         task.id = PersistenceManager.getLastId();

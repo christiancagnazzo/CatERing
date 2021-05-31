@@ -18,4 +18,6 @@ public interface TaskEventReceiver {
     void updateCompleteChanged(Task task);
 
     void updateAssignmentRemoved(Task task);
+
+    void updateSheetRegenerated(Sheet currentSheet);
 }

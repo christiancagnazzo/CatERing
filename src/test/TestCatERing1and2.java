@@ -34,6 +34,14 @@ public class TestCatERing1and2 {
 
         ObservableList<Recipe> recipes = CatERing.getInstance().getRecipeManager().getRecipes();
         Task task = CatERing.getInstance().getTaskManager().addTask(recipes.get(0));
+        ObservableList<PreparationTurn> turns = CatERing.getInstance().getTurnManager().getPreparationsTurns();
+
+        Task t = CatERing.getInstance().getTaskManager().getTask().get(0);
+        CatERing.getInstance().getTaskManager().assignTask(turns.get(2),t,"cdicdisci","cjdnjcdj");
+        CatERing.getInstance().getTaskManager().setComplete(t, true);
+        CatERing.getInstance().getTaskManager().setTime(t, "bjbbj");
+        CatERing.getInstance().getTaskManager().setPortions(t, "djnde");
+
 
         System.out.println(sheet);
         //CatERing.getInstance().getTaskManager().sortTask(task, 3);
@@ -42,7 +50,6 @@ public class TestCatERing1and2 {
         //System.out.println(sheet);
 
         User cook = User.loadUserById(3); // !!!!!
-        ObservableList<PreparationTurn> turns = CatERing.getInstance().getTurnManager().getPreparationsTurns();
 
         CatERing.getInstance().getTaskManager().assignTask(turns.get(0), task,"","3 porzioni");
 
@@ -50,9 +57,12 @@ public class TestCatERing1and2 {
         CatERing.getInstance().getTaskManager().setPortions(task,"10 porzioni");
         CatERing.getInstance().getTaskManager().setComplete(task, true);
 
-        CatERing.getInstance().getTaskManager().deleteAssignment(task);
+        //CatERing.getInstance().getTaskManager().deleteAssignment(task);
         CatERing.getInstance().getTaskManager().setNewTurn(task, turns.get(1));
-        CatERing.getInstance().getTaskManager().setCook(task, currentUser);
+        CatERing.getInstance().getTaskManager().setCook(task, cook);
+
+        CatERing.getInstance().getTaskManager().regenerateSheet(sheet);
+        System.out.println(sheet);
         // todo: migliora test (separa e Load Sheet)
         // todo: test openSheet()
         // todo: test loadsheet()

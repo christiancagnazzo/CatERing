@@ -22,6 +22,11 @@ public class TaskManager {
         eventReceivers = new ArrayList<>();
     }
 
+    // TODO provaaaaaaaaaaaaaaaaaa
+    public ArrayList<Task> getTask(){
+        return currentSheet.getTaskList();
+    }
+
     public Sheet createSheet(EventInfo ev, ServiceInfo serv) throws UseCaseLogicException, TaskException {
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
 
@@ -41,10 +46,10 @@ public class TaskManager {
 
         for (MenuItem item: allItems){
             Recipe recipe = item.getItemRecipe();
-            sheet.addNewTask(recipe);
+            sheet.addNewTask(recipe, false);
             ArrayList<CookingProcedure> allMi = CatERing.getInstance().getRecipeManager().getAllNecessaryProcedure(recipe);
             for (CookingProcedure cp : allMi){
-                sheet.addNewTask(recipe);
+                sheet.addNewTask(cp, false);
             }
         }
 
@@ -58,7 +63,7 @@ public class TaskManager {
         if (currentSheet == null)
                 throw new UseCaseLogicException();
 
-        Task task = currentSheet.addNewTask(procedure);
+        Task task = currentSheet.addNewTask(procedure, true);
 
         this.notifyNewTaskAdded(task);
         return task;
@@ -95,7 +100,22 @@ public class TaskManager {
         if (!sheet.isOwner(user))
             throw new TaskException();
 
-        setCurrentSheet(sheet);
+        this.setCurrentSheet(sheet);
+    }
+
+    public void regenerateSheet(Sheet sheet) throws TaskException, UseCaseLogicException {
+        User user = CatERing.getInstance().getUserManager().getCurrentUser();
+
+        if (!user.isChef())
+            throw new UseCaseLogicException();
+
+        if (!sheet.isOwner(user))
+            throw new TaskException();
+
+        ArrayList<Task> deleted = currentSheet.regenerate();
+        this.notifySheetRegenerated();
+        for (Task task : deleted)
+            this.notifyTaskDeleted(task);
     }
 
     /* se non vuole inserire tempo o porzioni stringhe vuote */
@@ -151,10 +171,15 @@ public class TaskManager {
     }
 
     public void setCook(Task task, User cook) throws UseCaseLogicException, TaskException {
+        if (task.getTurn() == null)
+            throw new UseCaseLogicException();
+
         this.assignTask(task.getTurn(),task,cook,task.getTime(),task.getPortions());
     }
 
     public void setNewTurn(Task task, PreparationTurn turn) throws TaskException, UseCaseLogicException {
+        if (task.getTurn() == null)
+            throw new UseCaseLogicException();
         this.assignTask(turn,task,task.getCook(),task.getTime(),task.getPortions());
     }
 
@@ -218,6 +243,11 @@ public class TaskManager {
         }
     }
 
+    private void notifySheetRegenerated() {
+        for (TaskEventReceiver er : this.eventReceivers) {
+            er.updateSheetRegenerated(currentSheet);
+        }
+    }
 
     public void addEventReceiver(TaskEventReceiver rec) {
         this.eventReceivers.add(rec);
