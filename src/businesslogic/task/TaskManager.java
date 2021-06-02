@@ -123,7 +123,7 @@ public class TaskManager {
         if (currentSheet == null || !currentSheet.isTaskIn(task))
             throw new UseCaseLogicException();
 
-        if ( (cook != null && !cook.isCook() && !turn.isAvailable(cook)) || (turn.isExpired()) || (turn.isSaturated()) )
+        if ( (cook != null && (!cook.isCook() || !turn.isAvailable(cook))) || (turn.isExpired()) || (turn.isSaturated()) )
             throw new TaskException();
 
         task.setTurn(turn, cook, time, portion);

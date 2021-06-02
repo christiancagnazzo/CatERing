@@ -15,7 +15,7 @@ public class User {
 
     private static Map<Integer, User> loadedUsers = FXCollections.observableHashMap();
 
-    public static enum Role {SERVIZIO, CUOCO, CHEF, ORGANIZZATORE};
+    public enum Role {SERVIZIO, CUOCO, CHEF, ORGANIZZATORE};
 
     private int id;
     private String username;

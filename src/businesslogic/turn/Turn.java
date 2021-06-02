@@ -67,4 +67,10 @@ public abstract class Turn {
         return id;
     }
 
+    @Override
+    public String toString() {
+        return "date=" + date +
+                ", start=" + start +
+                ", end=" + end;
+    }
 }

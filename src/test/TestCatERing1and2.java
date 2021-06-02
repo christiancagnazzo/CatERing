@@ -63,7 +63,6 @@ public class TestCatERing1and2 {
 
         CatERing.getInstance().getTaskManager().regenerateSheet(sheet);
         System.out.println(sheet);
-        // todo: migliora test (separa e Load Sheet)
         // todo: test openSheet()
         // todo: test loadsheet()
     }
