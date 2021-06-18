@@ -39,7 +39,7 @@ public class TestCatERing1c {
             CatERing.getInstance().getTaskManager().regenerateSheet(sheet);
 
 
-            System.out.println("S\nHEET AFTER");
+            System.out.println("\nSHEET AFTER");
             System.out.println(sheet);
 
         } catch (UseCaseLogicException | TaskException e) {

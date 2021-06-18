@@ -38,7 +38,7 @@ public class Task {
     public String toString(){
         StringBuilder s = new StringBuilder(procedure.toString());
         s.append(". time: "+time+"; portions: "+portions+"; complete: "+completed);
-        s.append("; turn:"+turn+"; cook: "+cook);
+        s.append("; turn:"+turn+"; cook: "+ cook);
         return s.toString();
     }
 

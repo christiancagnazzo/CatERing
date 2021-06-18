@@ -32,7 +32,8 @@ public class TestCatERing5 {
             System.out.println("SHEET BEFORE");
             System.out.println(sheet);
 
-            CatERing.getInstance().getTaskManager().assignTask(turns.get(0),t1,currentUser,"mezz'ora","");
+            // todo prova uno con un cuocooooooooo
+            CatERing.getInstance().getTaskManager().assignTask(turns.get(0),t1,"mezz'ora","");
             CatERing.getInstance().getTaskManager().assignTask(turns.get(1),t2,"","5 porzioni");
             CatERing.getInstance().getTaskManager().assignTask(turns.get(2),t3,"un'ora","10 pezzi");
 
