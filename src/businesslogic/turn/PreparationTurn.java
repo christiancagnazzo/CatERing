@@ -17,4 +17,11 @@ public class PreparationTurn extends Turn{
     public boolean isSaturated() {
         return saturated;
     }
+
+    @Override
+    public String toString() {
+        String s = super.toString();
+        s += " Saturated: "+ saturated;
+        return s;
+    }
 }

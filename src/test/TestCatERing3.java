@@ -8,14 +8,12 @@ import businesslogic.recipe.Recipe;
 import businesslogic.task.Sheet;
 import businesslogic.task.Task;
 import businesslogic.task.TaskException;
-import businesslogic.user.User;
 import javafx.collections.ObservableList;
 
 public class TestCatERing3 {
     public static void main(String[] args) {
         try {
             CatERing.getInstance().getUserManager().fakeLogin("Lidia");
-            User currentUser = CatERing.getInstance().getUserManager().getCurrentUser();
 
             EventInfo event = CatERing.getInstance().getEventManager().getEventInfo().get(2);
             ServiceInfo service = event.getServices().get(0);

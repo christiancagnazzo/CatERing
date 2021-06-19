@@ -134,7 +134,7 @@ public class Sheet {
     }
 
     public static void updateSheetRegenerated(Sheet sheet) {
-        String s = "UPDATE Tasks SET chef_id = null, completed = 0, time = null, portions = null, turn_id = null WHERE id = ?";
+        String s = "UPDATE Tasks SET cook_id = null, completed = 0, time = null, portions = null, turn_id = null WHERE id = ?";
         PersistenceManager.executeBatchUpdate(s, sheet.taskList.size(), new BatchUpdateHandler() {
             @Override
             public void handleBatchItem(PreparedStatement ps, int batchCount) throws SQLException {

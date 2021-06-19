@@ -20,7 +20,7 @@ public class TurnManager {
 
     public void setSaturated(PreparationTurn turn, boolean saturated){
         turn.setSaturated(saturated);
-        // TODO: notify (persistence)
+        // TODO: notify (turn persistence)
     }
 }
 

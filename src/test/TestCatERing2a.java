@@ -15,7 +15,6 @@ public class TestCatERing2a {
     public static void main(String[] args) {
         try {
             CatERing.getInstance().getUserManager().fakeLogin("Lidia");
-            User currentUser = CatERing.getInstance().getUserManager().getCurrentUser();
 
             EventInfo event = CatERing.getInstance().getEventManager().getEventInfo().get(2);
             ServiceInfo service = event.getServices().get(0);

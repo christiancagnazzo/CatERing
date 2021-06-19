@@ -16,7 +16,7 @@ public class TestCatERing5 {
     public static void main(String[] args) {
         try {
             CatERing.getInstance().getUserManager().fakeLogin("Lidia");
-            User currentUser = CatERing.getInstance().getUserManager().getCurrentUser();
+            User cook = User.loadUser("Marinella");
 
             EventInfo event = CatERing.getInstance().getEventManager().getEventInfo().get(2);
             ServiceInfo service = event.getServices().get(0);
@@ -32,9 +32,8 @@ public class TestCatERing5 {
             System.out.println("SHEET BEFORE");
             System.out.println(sheet);
 
-            // todo prova uno con un cuocooooooooo
             CatERing.getInstance().getTaskManager().assignTask(turns.get(0),t1,"mezz'ora","");
-            CatERing.getInstance().getTaskManager().assignTask(turns.get(1),t2,"","5 porzioni");
+            CatERing.getInstance().getTaskManager().assignTask(turns.get(1),t2,cook,"","5 porzioni");
             CatERing.getInstance().getTaskManager().assignTask(turns.get(2),t3,"un'ora","10 pezzi");
 
             System.out.println("\nSHEET AFTER");

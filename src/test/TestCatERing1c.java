@@ -9,14 +9,12 @@ import businesslogic.task.Sheet;
 import businesslogic.task.Task;
 import businesslogic.task.TaskException;
 import businesslogic.turn.PreparationTurn;
-import businesslogic.user.User;
 import javafx.collections.ObservableList;
 
 public class TestCatERing1c {
     public static void main(String[] args) {
         try {
             CatERing.getInstance().getUserManager().fakeLogin("Lidia");
-            User currentUser = CatERing.getInstance().getUserManager().getCurrentUser();
 
             EventInfo event = CatERing.getInstance().getEventManager().getEventInfo().get(2);
             ServiceInfo service = event.getServices().get(0);
@@ -27,7 +25,7 @@ public class TestCatERing1c {
             CatERing.getInstance().getTaskManager().addTask(recipes.get(0));
             ObservableList<PreparationTurn> turns = CatERing.getInstance().getTurnManager().getPreparationsTurns();
 
-            Task t = CatERing.getInstance().getTaskManager().getTask().get(0);
+            Task t = CatERing.getInstance().getTaskManager().getAllTask().get(0);
             CatERing.getInstance().getTaskManager().assignTask(turns.get(2),t,"mezz'ora","3/4 porzioni");
             CatERing.getInstance().getTaskManager().setTime(t, "");
             CatERing.getInstance().getTaskManager().setPortions(t, "djnde");

@@ -21,8 +21,7 @@ public class TaskManager {
         eventReceivers = new ArrayList<>();
     }
 
-    // TODO provaaaaaaaaaaaaaaaaaa
-    public ArrayList<Task> getTask(){
+    public ArrayList<Task> getAllTask(){
         return currentSheet.getTaskList();
     }
 
@@ -32,11 +31,11 @@ public class TaskManager {
         if (!user.isChef())
             throw new UseCaseLogicException();
 
-        if (!ev.isAssigned(user))
-            throw new TaskException();
-
         if (!ev.isPlanned(serv) || (serv.getMenu() == null))
             throw new UseCaseLogicException();
+
+        if (!ev.isAssigned(user))
+            throw new TaskException();
 
         Sheet sheet = new Sheet(user, serv);
         Menu m = serv.getMenu();
@@ -46,8 +45,8 @@ public class TaskManager {
         for (MenuItem item: allItems){
             Recipe recipe = item.getItemRecipe();
             sheet.addNewTask(recipe, false);
-            ArrayList<CookingProcedure> allMi = CatERing.getInstance().getRecipeManager().getAllNecessaryProcedure(recipe);
-            for (CookingProcedure cp : allMi){
+            ArrayList<CookingProcedure> procedure = CatERing.getInstance().getRecipeManager().getAllNecessaryProcedure(recipe);
+            for (CookingProcedure cp : procedure){
                 sheet.addNewTask(cp, false);
             }
         }

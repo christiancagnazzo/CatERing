@@ -14,17 +14,14 @@ import javafx.collections.ObservableList;
 
 public class TestCatERing5l {
     public static void main(String[] args) {
-
         CatERing.getInstance().getUserManager().fakeLogin("Lidia");
-        User currentUser = CatERing.getInstance().getUserManager().getCurrentUser();
 
-        EventInfo event = CatERing.getInstance().getEventManager().getEventInfo().get(2);
-        ServiceInfo service = event.getServices().get(0);
         ObservableList<PreparationTurn> turns = CatERing.getInstance().getTurnManager().getPreparationsTurns();
         PreparationTurn turn = turns.get(0);
 
+        System.out.println(turn);
         CatERing.getInstance().getTurnManager().setSaturated(turn,true);
-        System.out.println(turn); // TODO OOOOOOOOO
+        System.out.println(turn);
 
     }
 }

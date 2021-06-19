@@ -16,7 +16,8 @@ public class TestCatERing5d {
     public static void main(String[] args) {
         try {
             CatERing.getInstance().getUserManager().fakeLogin("Lidia");
-            User currentUser = CatERing.getInstance().getUserManager().getCurrentUser();
+            User cook1 = User.loadUser("Marinella");
+            User cook2 = User.loadUser("Antonietta");
 
             EventInfo event = CatERing.getInstance().getEventManager().getEventInfo().get(2);
             ServiceInfo service = event.getServices().get(0);
@@ -26,13 +27,12 @@ public class TestCatERing5d {
 
             ObservableList<Recipe> recipes = CatERing.getInstance().getRecipeManager().getRecipes();
             Task t1 = CatERing.getInstance().getTaskManager().addTask(recipes.get(0));
-            CatERing.getInstance().getTaskManager().assignTask(turns.get(0),t1,currentUser,"mezz'ora","");
+            CatERing.getInstance().getTaskManager().assignTask(turns.get(0),t1,cook1,"mezz'ora","");
 
             System.out.println("SHEET BEFORE");
             System.out.println(sheet);
 
-
-            //CatERing.getInstance().getTaskManager().setCook(); // todo
+            CatERing.getInstance().getTaskManager().setCook(t1,cook2);
 
             System.out.println("\nSHEET AFTER");
             System.out.println(sheet);
