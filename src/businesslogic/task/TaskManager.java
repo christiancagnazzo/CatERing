@@ -10,9 +10,11 @@ import businesslogic.recipe.CookingProcedure;
 import businesslogic.recipe.Recipe;
 import businesslogic.turn.PreparationTurn;
 import businesslogic.user.User;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class TaskManager {
@@ -20,11 +22,16 @@ public class TaskManager {
     private ArrayList<TaskEventReceiver> eventReceivers;
 
     public TaskManager(){
+        Sheet.loadAllSheet();
         eventReceivers = new ArrayList<>();
     }
 
     public ObservableList<Task> getAllTask(){
-        return currentSheet.getTaskList();
+        return FXCollections.unmodifiableObservableList(currentSheet.getTaskList());
+    }
+
+    public ObservableList<Sheet> getAllSheet() {
+        return FXCollections.unmodifiableObservableList(Sheet.getAllSheet());
     }
 
     public Sheet createSheet(EventInfo ev, ServiceInfo serv) throws UseCaseLogicException, TaskException {

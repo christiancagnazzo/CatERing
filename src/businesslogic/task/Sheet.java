@@ -1,10 +1,6 @@
 package businesslogic.task;
 
-import businesslogic.event.EventInfo;
 import businesslogic.event.ServiceInfo;
-import businesslogic.menu.Menu;
-import businesslogic.menu.MenuItem;
-import businesslogic.menu.Section;
 import businesslogic.recipe.CookingProcedure;
 import businesslogic.user.User;
 import javafx.collections.FXCollections;
@@ -17,7 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 
 public class Sheet {
@@ -34,7 +30,10 @@ public class Sheet {
         taskList = FXCollections.observableArrayList();
     }
 
-    public ObservableList<Task> getTaskList(){ return FXCollections.unmodifiableObservableList(this.taskList);}
+    public ObservableList<Task> getTaskList(){ return FXCollections.observableArrayList(this.taskList);}
+    public static ObservableList<Sheet> getAllSheet(){
+        return FXCollections.observableArrayList(loadedSheet.values());
+    }
 
     public Task addNewTask(CookingProcedure cookingProcedure, boolean added){
         Task task = new Task(cookingProcedure, added);

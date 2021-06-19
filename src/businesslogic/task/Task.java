@@ -90,16 +90,23 @@ public class Task {
         PersistenceManager.executeQuery(query, new ResultHandler() {
             @Override
             public void handle(ResultSet rs) throws SQLException {
-                // todo : può essere anche preparazione !!!!!!
-                CookingProcedure ck = Recipe.loadRecipeById(rs.getInt("procedure_id"));
+                CookingProcedure ck = CookingProcedure.loadCookingProcedureById(rs.getInt("procedure_id"));
                 boolean added = rs.getBoolean("added");
                 Task t = new Task(ck,added);
                 t.time = rs.getString("time");
                 t.portions = rs.getString("portions");
                 t.id = rs.getInt("id");
                 t.completed = rs.getBoolean("completed");
-                t.cook = User.loadUserById(rs.getInt("cook_id"));
-                // todo t.turn = .................
+                int cook = rs.getInt("cook_id");
+                if (cook != 0)
+                    t.cook = User.loadUserById(rs.getInt("cook_id"));
+                else
+                    t.cook = null;
+                int turn = rs.getInt("turn_id");
+                if (turn != 0)
+                    t.turn = Turn.loadPrepTurnById(rs.getInt("turn_id"));
+                else
+                    t.turn = null;
                 result.add(t);
             }
         });

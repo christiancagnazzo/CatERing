@@ -53,6 +53,12 @@ public abstract class Turn {
         return FXCollections.observableArrayList(allService.values());
     }
 
+    public static PreparationTurn loadPrepTurnById(int turn_id) {
+        // TODO
+        // return fake turn for test
+        return new PreparationTurn(new Date(2021,7,3), new Time(13,40,00), new Time(15,40,00));
+    }
+
     public boolean isExpired(){
         return this.date.before(new Date());
     }

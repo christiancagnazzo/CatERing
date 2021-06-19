@@ -5,6 +5,12 @@ public class Preparation implements CookingProcedure{
     private String name;
 
     public Preparation() {
+        id = 0;
+    }
+
+    public static CookingProcedure loadPreparationById(int id) {
+        // TODO
+        return new Preparation();
     }
 
     public String toString() {
@@ -15,5 +21,7 @@ public class Preparation implements CookingProcedure{
     public int getId() {
         return id;
     }
+
+
 
 }
