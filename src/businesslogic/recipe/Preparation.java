@@ -4,8 +4,7 @@ public class Preparation implements CookingProcedure{
     private int id;
     private String name;
 
-    private Preparation() {
-
+    public Preparation() {
     }
 
     public String toString() {
@@ -16,4 +15,5 @@ public class Preparation implements CookingProcedure{
     public int getId() {
         return id;
     }
+
 }

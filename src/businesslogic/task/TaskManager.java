@@ -10,6 +10,8 @@ import businesslogic.recipe.CookingProcedure;
 import businesslogic.recipe.Recipe;
 import businesslogic.turn.PreparationTurn;
 import businesslogic.user.User;
+import javafx.collections.ObservableList;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +23,7 @@ public class TaskManager {
         eventReceivers = new ArrayList<>();
     }
 
-    public ArrayList<Task> getAllTask(){
+    public ObservableList<Task> getAllTask(){
         return currentSheet.getTaskList();
     }
 

@@ -1,10 +1,16 @@
 package businesslogic.task;
 
+import businesslogic.menu.MenuItem;
 import businesslogic.recipe.CookingProcedure;
+import businesslogic.recipe.Recipe;
 import businesslogic.turn.PreparationTurn;
+import businesslogic.turn.Turn;
 import businesslogic.user.User;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import persistence.BatchUpdateHandler;
 import persistence.PersistenceManager;
+import persistence.ResultHandler;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -30,6 +36,7 @@ public class Task {
         this.portions = "";
         id = 0;
     }
+
 
     public int getId() {
         return id;
@@ -77,7 +84,31 @@ public class Task {
 
     // STATIC METHODS FOR PERSISTENCE
 
-    public static void saveAllTasks(ArrayList<Task> taskList, int sheet_id) {
+    public static ObservableList<Task> loadTaskFor(int id) {
+        ObservableList<Task> result = FXCollections.observableArrayList();
+        String query = "SELECT * FROM Tasks WHERE sheet_id = " + id + " ORDER BY position";
+        PersistenceManager.executeQuery(query, new ResultHandler() {
+            @Override
+            public void handle(ResultSet rs) throws SQLException {
+                // todo : può essere anche preparazione !!!!!!
+                CookingProcedure ck = Recipe.loadRecipeById(rs.getInt("procedure_id"));
+                boolean added = rs.getBoolean("added");
+                Task t = new Task(ck,added);
+                t.time = rs.getString("time");
+                t.portions = rs.getString("portions");
+                t.id = rs.getInt("id");
+                t.completed = rs.getBoolean("completed");
+                t.cook = User.loadUserById(rs.getInt("cook_id"));
+                // todo t.turn = .................
+                result.add(t);
+            }
+        });
+
+        return result;
+    }
+
+
+    public static void saveAllTasks(ObservableList<Task> taskList, int sheet_id) {
         String taskInsert = "INSERT INTO catering.Tasks (procedure_id, sheet_id, position) VALUES (?, ?, ?);";
         PersistenceManager.executeBatchUpdate(taskInsert, taskList.size(), new BatchUpdateHandler() {
             @Override
@@ -148,5 +179,17 @@ public class Task {
         String s = "UPDATE Tasks SET turn_id = null"+
                 " WHERE id = " + task.getId();
         PersistenceManager.executeUpdate(s);
+    }
+
+    public boolean getComplete() {
+        return this.completed;
+    }
+
+    public void setProcedure(CookingProcedure procedure) {
+        this.procedure = procedure;
+    }
+
+    public void setAdded(boolean added) {
+        this.added = added;
     }
 }

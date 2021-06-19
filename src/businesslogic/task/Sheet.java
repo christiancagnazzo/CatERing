@@ -2,6 +2,9 @@ package businesslogic.task;
 
 import businesslogic.event.EventInfo;
 import businesslogic.event.ServiceInfo;
+import businesslogic.menu.Menu;
+import businesslogic.menu.MenuItem;
+import businesslogic.menu.Section;
 import businesslogic.recipe.CookingProcedure;
 import businesslogic.user.User;
 import javafx.collections.FXCollections;
@@ -22,17 +25,16 @@ public class Sheet {
     private int id;
     private User owner;
     private ServiceInfo service;
-    private ArrayList<Task> taskList;
+    private ObservableList<Task> taskList;
 
     public Sheet(User owner, ServiceInfo service){
         id = 0;
         this.service = service;
         this.owner = owner;
-        taskList = new ArrayList<>();
+        taskList = FXCollections.observableArrayList();
     }
 
-    // todo provaaaaaaaaaaaaa
-    public ArrayList<Task> getTaskList(){ return taskList;}
+    public ObservableList<Task> getTaskList(){ return FXCollections.unmodifiableObservableList(this.taskList);}
 
     public Task addNewTask(CookingProcedure cookingProcedure, boolean added){
         Task task = new Task(cookingProcedure, added);
@@ -148,27 +150,23 @@ public class Sheet {
         });
     }
 
-
-    // TODO
- /*   public static ObservableList<Sheet> loadAllSheet(){
+    public static ObservableList<Sheet> loadAllSheet(){
         String query = "SELECT * FROM Sheets WHERE " + true;
         ArrayList<Sheet> newSheets = new ArrayList<>();
         ArrayList<Sheet> oldSheets = new ArrayList<>();
-        ArrayList<Integer> oldUids = new ArrayList<>();
-        ArrayList<Integer> oldSids = new ArrayList<>();
 
         PersistenceManager.executeQuery(query, new ResultHandler() {
             @Override
             public void handle(ResultSet rs) throws SQLException {
                 int id = rs.getInt("id");
+                int user_id = rs.getInt("owner_id");
+                int service_id = rs.getInt("service_id");
                 if (loadedSheet.containsKey(id)) {
                     Sheet s = loadedSheet.get(id);
-                    oldUids.add(rs.getInt("owner_id"));
-                    oldSids.add(rs.getInt("service_id"));
+                    s.owner = User.loadUserById(user_id);
+                    s.service = ServiceInfo.loadServiceById(service_id);
                     oldSheets.add(s);
                 } else {
-                    int user_id = rs.getInt("owner_id");
-                    int service_id = rs.getInt("service_id");
                     User u = User.loadUserById(user_id);
                     ServiceInfo ser = ServiceInfo.loadServiceById(service_id);
                     Sheet s = new Sheet(u,ser);
@@ -178,5 +176,46 @@ public class Sheet {
             }
         });
 
-    }*/
+        for (Sheet s : newSheets) {
+            // load tasks
+            s.taskList = Task.loadTaskFor(s.id);
+        }
+
+        for (Sheet s : oldSheets) {
+            // upadte tasks
+            s.updateTask(Task.loadTaskFor(s.id));
+        }
+
+        for (Sheet s: newSheets) {
+            loadedSheet.put(s.id, s);
+        }
+
+        return FXCollections.observableArrayList(loadedSheet.values());
+    }
+
+    private void updateTask(ObservableList<Task> newTask) {
+        ObservableList<Task> updatedTask = FXCollections.observableArrayList();
+        for (Task t : newTask) {
+            Task prev = this.findTaskById(t.getId());
+            if (prev == null) {
+                updatedTask.add(t);
+            } else {
+                prev.setTurn(t.getTurn(), t.getCook(), t.getTime(), t.getPortions());
+                prev.setComplete(t.getComplete());
+                prev.setProcedure(t.getProcedure());
+                prev.setAdded(t.isAdded());
+                updatedTask.add(prev);
+            }
+        }
+        this.taskList.clear();
+        this.taskList.addAll(updatedTask);
+    }
+
+    private Task findTaskById(int id) {
+        for (Task t : taskList) {
+            if (t.getId() == id) return t;
+        }
+        return null;
+    }
+
   }

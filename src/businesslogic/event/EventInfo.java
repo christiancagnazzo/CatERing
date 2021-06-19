@@ -41,6 +41,8 @@ public class EventInfo implements EventItemInfo {
     public boolean isAssigned(User chef){
         return this.chef.getId() == chef.getId();
     }
+
+
     // STATIC METHODS FOR PERSISTENCE
 
     public static ObservableList<EventInfo> loadAllEventInfo() {
