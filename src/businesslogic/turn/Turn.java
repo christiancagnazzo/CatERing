@@ -22,7 +22,6 @@ public abstract class Turn {
     private static Map<Integer, PreparationTurn> allPreparation = new HashMap<>();
     private static Map<Integer, ServiceTurn> allService = new HashMap<>();
 
-    // TODO
     public Turn(Date date, Time start, Time end){
         this.id = 0;
         this.date = date;
@@ -47,10 +46,6 @@ public abstract class Turn {
 
     public static void loadAllServiceTurns() {
         // TODO
-    }
-
-    public static ObservableList<ServiceTurn> getAllServiceTurns() {
-        return FXCollections.observableArrayList(allService.values());
     }
 
     public static PreparationTurn loadPrepTurnById(int turn_id) {

@@ -10,13 +10,11 @@ public class TurnManager {
         Turn.loadAllServiceTurns();
     }
 
+    // TODO: TEST
     public ObservableList<PreparationTurn> getPreparationsTurns() {
         return FXCollections.unmodifiableObservableList(Turn.getAllPreparationTurns());
     }
 
-    public ObservableList<ServiceTurn> getServiceTurns() {
-        return FXCollections.unmodifiableObservableList(Turn.getAllServiceTurns());
-    }
 
     public void setSaturated(PreparationTurn turn, boolean saturated){
         turn.setSaturated(saturated);
