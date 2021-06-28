@@ -76,9 +76,12 @@ public class TaskManager {
         return task;
     }
 
-    public void deleteTask(Task task) throws UseCaseLogicException {
+    public void deleteTask(Task task) throws UseCaseLogicException, TaskException {
         if (currentSheet == null)
-                throw new UseCaseLogicException();
+            throw new UseCaseLogicException();
+
+        if (!task.isAdded())
+            throw new TaskException();
 
         currentSheet.removeTask(task);
 

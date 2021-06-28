@@ -72,6 +72,7 @@ public class Task {
 
     public void removeAssignment() {
         this.turn = null;
+        this.cook = null;
     }
 
     public boolean isAdded(){ return this.added; }
@@ -79,8 +80,19 @@ public class Task {
     public String getTime(){ return time;}
     public String getPortions(){ return portions;}
     public User getCook(){ return cook;}
-
+    public boolean getComplete() {
+        return this.completed;
+    }
     public PreparationTurn getTurn(){ return turn;}
+
+    public void setProcedure(CookingProcedure procedure) {
+        this.procedure = procedure;
+    }
+    public void setAdded(boolean added) {
+        this.added = added;
+    }
+
+
 
     // STATIC METHODS FOR PERSISTENCE
 
@@ -188,15 +200,5 @@ public class Task {
         PersistenceManager.executeUpdate(s);
     }
 
-    public boolean getComplete() {
-        return this.completed;
-    }
 
-    public void setProcedure(CookingProcedure procedure) {
-        this.procedure = procedure;
-    }
-
-    public void setAdded(boolean added) {
-        this.added = added;
-    }
 }
