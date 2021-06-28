@@ -6,10 +6,10 @@ public interface CookingProcedure {
     static CookingProcedure loadCookingProcedureById(int id) {
         CookingProcedure ck;
         ck = Recipe.loadRecipeById(id);
-        if (ck.getId() != 0)
+        if (ck != null && ck.getId() != 0)
             return ck;
         ck = Preparation.loadPreparationById(id);
-        if (ck.getId() != 0)
+        if (ck != null && ck.getId() != 0)
             return ck;
         return null;
     }
